@@ -1,6 +1,9 @@
-package Import
+package com.mahjong.import
 
+import android.content.Context
 import android.database.sqlite.SQLiteOpenHelper
+import com.mahjong.sqlhelper.ImportHelperFactory
+import java.security.AccessControlContext
 
 class MahjongManagerImpoter : Impoter {
 
@@ -26,8 +29,9 @@ class MahjongManagerImpoter : Impoter {
 
     }
 
-    override fun import(): SQLiteOpenHelper {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun import(context: Context?): SQLiteOpenHelper? {
+        //return ImportHelperFactory.createHelper(this.helperName,context)
+        return null
     }
 
 }
