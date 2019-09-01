@@ -2,14 +2,15 @@ package com.mahjong.import
 
 import android.content.Context
 import android.database.sqlite.SQLiteOpenHelper
+import com.mahjong.common.HelperNameConst
 import com.mahjong.sqlhelper.ImportHelperFactory
 import java.security.AccessControlContext
 
 class MahjongManagerImpoter : Impoter {
 
-    override val helperName: String = "MahjongManagerHelper"
+    override val helperName: String = HelperNameConst.MAHJONG_MANAGER_HELPER.getString();
 
-    companion object MahjongManagerData{
+    companion object MahjongManagerData {
 
         const val DATABASE_NAME: String = "MahjongMgrBkFile"
 
