@@ -7,6 +7,6 @@ interface Impoter {
 
     val helperName: String
 
-    fun import(context: Context?): SQLiteOpenHelper?
+    abstract fun import(context: Context?): SQLiteOpenHelper?
 
 }

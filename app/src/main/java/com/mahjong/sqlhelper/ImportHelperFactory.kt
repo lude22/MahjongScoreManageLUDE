@@ -1,21 +1,21 @@
 package com.mahjong.sqlhelper
 
-import com.mahjong.import.MahjongManagerImpoter
+import com.mahjong.import.MahjongManagerImporter
 import android.content.Context
 import android.database.sqlite.SQLiteOpenHelper
-import android.support.constraint.solver.widgets.Helper
 import com.mahjong.common.HelperNameConst
 
 object ImportHelperFactory {
 
-    fun createHelper(helperName: String, context: Context): SQLiteOpenHelper? {
+    //
+    fun createHelper(helperName: String, context: Context?): SQLiteOpenHelper? {
 
         when (helperName) {
-            HelperNameConst.MAHJONG_MANAGER_HELPER.getString() -> return MahjongManagerHelper(
+            HelperNameConst.MAHJONG_MANAGER_HELPER.getHelperName() -> return MahjongManagerHelper(
                 context,
-                MahjongManagerImpoter.DATABASE_NAME,
+                MahjongManagerImporter.DATABASE_NAME,
                 null,
-                MahjongManagerImpoter.DATABASE_VERSION
+                MahjongManagerImporter.DATABASE_VERSION
             )
 
         }

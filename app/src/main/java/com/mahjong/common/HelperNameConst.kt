@@ -2,12 +2,17 @@ package com.mahjong.common
 
 // HelperName is used ImportHelperFactory to make Helper.
 enum class HelperNameConst {
+
+    /*
+        HelperName to make MahjongManagerHelper at ImportHelperFactory.
+     */
     MAHJONG_MANAGER_HELPER {
-        override fun getString(): String {
+        override fun getHelperName(): String {
             return "MAHJONG_MANAGER_HELPER"
         }
     };
 
-    abstract fun getString(): String
+    //各要素の持つHelperNameを取得するabstractメソッド
+    abstract fun getHelperName(): String
 
 }
