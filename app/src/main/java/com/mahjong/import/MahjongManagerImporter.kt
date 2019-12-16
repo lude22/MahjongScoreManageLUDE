@@ -2,7 +2,7 @@ package com.mahjong.import
 
 import android.content.Context
 import android.database.sqlite.SQLiteOpenHelper
-import com.mahjong.common.HelperNameConst
+import com.mahjong.constant.HelperNameConst
 import com.mahjong.sqlhelper.ImportHelperFactory
 
 object MahjongManagerImporter : Impoter {
@@ -30,7 +30,7 @@ object MahjongManagerImporter : Impoter {
     override fun import(context: Context?): SQLiteOpenHelper? {
         this.helper = ImportHelperFactory.createHelper(this.helperName,context)
 
-        return null
+        return helper
     }
 
 }

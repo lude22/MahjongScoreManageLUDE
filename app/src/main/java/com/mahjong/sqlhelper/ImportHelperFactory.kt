@@ -3,11 +3,11 @@ package com.mahjong.sqlhelper
 import com.mahjong.import.MahjongManagerImporter
 import android.content.Context
 import android.database.sqlite.SQLiteOpenHelper
-import com.mahjong.common.HelperNameConst
+import com.mahjong.constant.HelperNameConst
 
 object ImportHelperFactory {
 
-    //
+    //Create SQLiteHelper from helperName
     fun createHelper(helperName: String, context: Context?): SQLiteOpenHelper? {
 
         when (helperName) {

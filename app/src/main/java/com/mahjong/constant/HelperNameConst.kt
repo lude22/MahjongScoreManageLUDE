@@ -1,4 +1,4 @@
-package com.mahjong.common
+package com.mahjong.constant
 
 // HelperName is used ImportHelperFactory to make Helper.
 enum class HelperNameConst {

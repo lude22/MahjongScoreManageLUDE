@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.example.mahjong.R
-import com.mahjong.import.Impoter
 import com.mahjong.import.MahjongManagerImporter
 
 class MainActivity : AppCompatActivity() {
@@ -13,7 +12,7 @@ class MainActivity : AppCompatActivity() {
     //SQLiteの接続ラッパー
     private var helper : SQLiteOpenHelper? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
