@@ -7,25 +7,32 @@ import android.os.Bundle
 import com.example.mahjong.R
 import com.mahjong.import.MahjongManagerImporter
 
+
+val testSql =
+    "select player.PlayerName,sum(detail.GamePoint) as point from T04_GAME game inner join T05_GAMEDETAIL detail on game.ScoreSEQ = detail.ScoreSEQ and game.GameSEQ = detail.GameSEQ inner join T02_PLAYER player on player.PlayerSEQ = detail.GamePlayer where game.ScoreSEQ in (select ScoreSEQ from T03_SCORE score where score.ScoreYear = '2019') group by detail.GamePlayer order by point desc;"
+
 class MainActivity : AppCompatActivity() {
 
-    //SQLiteの接続ラッパー
+    //SQLite Connection Wrapper
     private var helper : SQLiteOpenHelper? = null
 
      override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+         super.onCreate(savedInstanceState)
+         setContentView(R.layout.activity_main)
 
-        //麻雀マネージャーをインポート
-        helper = mahjongManagerImport()
+         //Import Mahjong Manager
+         val cursor = mahjongManagerImport().readableDatabase.rawQuery(testSql,null)
+
+         cursor.moveToFirst()
+
 
     }
 
-    private fun mahjongManagerImport(): SQLiteOpenHelper? {
-        //コンテキストにActivityをセット
-        return MahjongManagerImporter.import(getApplicationContext())
+    private fun mahjongManagerImport(): SQLiteOpenHelper {
+         //Set Context at Activity
+         return MahjongManagerImporter.import(getApplicationContext())
 
-        //コンテキストにApplicationをセット
-        //return MahjongManagerImporter.import(this)
+         //Set Context at Application
+         //return MahjongManagerImporter.import(this)
     }
 }

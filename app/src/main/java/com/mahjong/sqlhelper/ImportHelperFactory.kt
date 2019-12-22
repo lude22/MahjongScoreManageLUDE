@@ -12,10 +12,7 @@ object ImportHelperFactory {
 
         when (helperName) {
             HelperNameConst.MAHJONG_MANAGER_HELPER.getHelperName() -> return MahjongManagerHelper(
-                context,
-                MahjongManagerImporter.DATABASE_NAME,
-                null,
-                MahjongManagerImporter.DATABASE_VERSION
+                context
             )
 
         }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteOpenHelper
 import com.mahjong.constant.HelperNameConst
 import com.mahjong.sqlhelper.ImportHelperFactory
+import java.lang.RuntimeException
 
 object MahjongManagerImporter : Impoter {
 
@@ -25,12 +26,14 @@ object MahjongManagerImporter : Impoter {
 
     const val TABLE_NAME_FIRSTMESSAGE = "T06_FIRSTMESSAGE"
 
-    var helper : SQLiteOpenHelper? = null
+    override fun import(context: Context?): SQLiteOpenHelper {
+        val helper = ImportHelperFactory.createHelper(this.helperName, context)
 
-    override fun import(context: Context?): SQLiteOpenHelper? {
-        this.helper = ImportHelperFactory.createHelper(this.helperName,context)
-
-        return helper
+        //Null Check to Non-Nullable
+        if (helper == null) {
+            throw RuntimeException()
+        } else {
+            return helper
+        }
     }
-
 }

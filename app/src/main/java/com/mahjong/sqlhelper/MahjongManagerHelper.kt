@@ -1,16 +1,14 @@
 package com.mahjong.sqlhelper
 
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.mahjong.import.MahjongManagerImporter
 
 class MahjongManagerHelper(
-    context: Context?,
-    dbName: String?,
-    factory: SQLiteDatabase.CursorFactory?,
-    version: Int
-) : SQLiteOpenHelper(context, dbName, factory, version) {
+    context: Context?
+) : SQLiteOpenHelper(context, MahjongManagerImporter.DATABASE_NAME, null, MahjongManagerImporter.DATABASE_VERSION) {
 
     val CREATE_T01_OPTION =
         "CREATE TABLE T01_OPTION (OptUma1 Integer,OptUma2 Integer,OptUma3 Integer,OptUma4 Integer,OptOka Integer,Optgenten Integer,Optsentenmiman Integer,Opthasuu Integer,Optkioku Integer,MailGoukeiPoint Integer,MailJyuniritu Integer,MailTaikyokusu Integer,MailJyuniKaisu Integer,MailTobiKaisu Integer,MailHeikinten Integer,MailSaikouten Integer,MailAisyo Integer , OptTippu Integer default 0, MailTippu Integer default 1);"
@@ -38,7 +36,7 @@ class MahjongManagerHelper(
 
     override fun onCreate(db: SQLiteDatabase?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        db.rawQuery(testSql,null)
+        db?.execSQL(CREATE_T01_OPTION)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
