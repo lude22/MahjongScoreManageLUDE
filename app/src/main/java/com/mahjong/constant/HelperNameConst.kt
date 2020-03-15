@@ -1,10 +1,13 @@
 package com.mahjong.constant
 
-// HelperName is used ImportHelperFactory to make Helper.
+/**
+ * This Class is Enum Class to Define HelperName.
+ * HelperName is used ImportHelperFactory to make Helper.
+ */
 enum class HelperNameConst {
 
-    /*
-        HelperName to make MahjongManagerHelper at ImportHelperFactory.
+    /**
+     * HelperName to make MahjongManagerHelper at ImportHelperFactory.
      */
     MAHJONG_MANAGER_HELPER {
         override fun getHelperName(): String {
@@ -12,7 +15,9 @@ enum class HelperNameConst {
         }
     };
 
-    //各要素の持つHelperNameを取得するabstractメソッド
+    /**
+     * Abstract Method to get HelperName.
+     */
     abstract fun getHelperName(): String
 
 }
