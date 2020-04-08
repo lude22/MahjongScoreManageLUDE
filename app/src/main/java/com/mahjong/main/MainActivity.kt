@@ -10,6 +10,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import com.mahjong.constant.DataBaseNameConst
 import com.mahjong.constant.MahjongManagerConst
 import com.mahjong.sqlhelper.HelperFactory
 import com.mahjong.sqlhelper.MahjongManagerHelper
@@ -33,12 +34,12 @@ class MainActivity : AppCompatActivity() {
 
         button.setOnClickListener {
 
-            Log.v("PUSH_START", "start setOnClickListener")
+            Log.v("MainActivity", "start setOnClickListener")
 
             //Import Mahjong Manager
 
             var helper =
-                HelperFactory.createHelper(MahjongManagerConst.DATABASE_NAME, applicationContext)
+                HelperFactory.createHelper(MahjongManagerConst.helperName, applicationContext)
 
             val cursor: Cursor
 
@@ -56,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            Log.v("PUSH_END", "end setOnClickListener")
+            Log.v("MainActivity", "end setOnClickListener")
 
         }
 

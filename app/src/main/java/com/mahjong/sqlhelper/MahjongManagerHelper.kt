@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.mahjong.constant.DataBaseNameConst
 import com.mahjong.constant.MahjongManagerConst
 import java.io.File
@@ -19,7 +20,6 @@ class MahjongManagerHelper : SQLiteOpenHelper {
 
     /**
      * コンストラクタ。
-     * コンテキストの保持、
      */
     constructor(context: Context) : super(
         context,
@@ -48,8 +48,12 @@ class MahjongManagerHelper : SQLiteOpenHelper {
      * 麻雀マネージャー用のデータベースを作成する。
      */
     public fun createDataBase() {
+
+        Log.v("MahjongManagerHelper", "start createDataBase")
+
         //データベースの存在判定
-        if (!checkDBExists()) {
+        if (checkDBExists()) {
+            // readableDatabaseメソッドを呼び出すことで、DBがオープンされる
             readableDatabase
 
             var toCheckDb: SQLiteDatabase? = null
@@ -68,6 +72,8 @@ class MahjongManagerHelper : SQLiteOpenHelper {
             }
 
         }
+
+        Log.v("MahjongManagerHelper", "start createDataBase")
     }
 
     /**
@@ -75,6 +81,8 @@ class MahjongManagerHelper : SQLiteOpenHelper {
      * 既に存在する場合はTRUE、それ以外はFALSE。
      */
     private fun checkDBExists(): Boolean {
+
+        Log.v("MahjongManagerHelper", "start checkDBExists")
 
         var db: SQLiteDatabase? = null
 
@@ -86,22 +94,25 @@ class MahjongManagerHelper : SQLiteOpenHelper {
 
         if (db == null) {
             // データベースが存在しない
+            Log.v("MahjongManagerHelper", "reason:There is no DB.")
+            Log.v("MahjongManagerHelper", "end checkDBExists")
             return false
         }
 
         // データベースのバージョンチェック
-        val oldVersion = db.version
-        val newVersion = MahjongManagerConst.DATABASE_VERSION
-
-        if (oldVersion == newVersion) {
+        if (db.version == MahjongManagerConst.DATABASE_VERSION) {
             // データベースのバージョンが最新
             db.close()
+            Log.v("MahjongManagerHelper", "reason:DB version is latest.")
+            Log.v("MahjongManagerHelper", "end checkDBExists")
             return true
         }
 
         // データベースのバーションが最新でないため削除
         val dbFile = File(dbPath)
         dbFile.delete()
+        Log.v("MahjongManagerHelper", "reason:DB version isn't latest.")
+        Log.v("MahjongManagerHelper", "end checkDBExists")
         return false
     }
 
@@ -109,6 +120,9 @@ class MahjongManagerHelper : SQLiteOpenHelper {
      * 麻雀マネージャーのDBファイルを雀ログのDBファイルへコピーする。
      */
     private fun copyDataBase() {
+
+        Log.v("MahjongManagerHelper", "start copyDataBase")
+
         val inputStream = mContext.assets.open(DataBaseNameConst.MAHJONG_MANAGER.getDataBaseName())
         val outputStream = FileOutputStream(dbPath)
 
@@ -125,6 +139,8 @@ class MahjongManagerHelper : SQLiteOpenHelper {
         outputStream.flush()
         outputStream.close()
         inputStream.close()
+
+        Log.v("MahjongManagerHelper", "end copyDataBase")
     }
 
 }
