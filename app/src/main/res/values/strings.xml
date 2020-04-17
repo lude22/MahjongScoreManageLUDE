@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">Mahjong</string>
+    <string name="app_name">雀ログ</string>
     <string name="button">PUSH</string>
+    <string name="backup">Backup</string>
     <string name="title_player">Player</string>
     <string name="title_point">Point</string>
 </resources>

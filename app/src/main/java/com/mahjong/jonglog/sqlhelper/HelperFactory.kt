@@ -1,9 +1,9 @@
-package com.mahjong.sqlhelper
+package com.mahjong.jonglog.sqlhelper
 
 import android.content.Context
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.mahjong.constant.HelperNameConst
+import com.mahjong.jonglog.constant.HelperNameConst
 
 object HelperFactory {
 

@@ -1,4 +1,4 @@
-package com.mahjong.dto
+package com.mahjong.jonglog.dto
 
 /*
     麻雀マネージャーの表示用データを保持するDTO

@@ -1,4 +1,4 @@
-package com.mahjong.constant
+package com.mahjong.jonglog.constant
 
 /**
  * This Class is Enum Class to Define DataBaseName.

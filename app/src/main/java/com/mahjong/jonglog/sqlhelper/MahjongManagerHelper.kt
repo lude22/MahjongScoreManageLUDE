@@ -1,15 +1,19 @@
-package com.mahjong.sqlhelper
+package com.mahjong.jonglog.sqlhelper
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
+import android.os.Environment
 import android.util.Log
-import com.mahjong.constant.DataBaseNameConst
-import com.mahjong.constant.MahjongManagerConst
+import androidx.security.crypto.EncryptedFile
+import androidx.security.crypto.MasterKeys
+import com.mahjong.jonglog.constant.DataBaseNameConst
+import com.mahjong.jonglog.constant.MahjongManagerConst
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
 
 
 /**
@@ -28,12 +32,15 @@ class MahjongManagerHelper : SQLiteOpenHelper {
         MahjongManagerConst.DATABASE_VERSION
     ) {
         mContext = context
-        dbPath = mContext.getDatabasePath(MahjongManagerConst.DATABASE_NAME).absolutePath
+        dbPath = mContext.getDatabasePath(databaseName).absolutePath
+        Log.v("MahjongManagerHelper", "dpPath : $dbPath")
     }
 
     private var mContext: Context
 
     private var dbPath: String
+
+    private var backUpExist: Boolean = true
 
     override fun onCreate(db: SQLiteDatabase?) {
         //何もしない
@@ -47,19 +54,19 @@ class MahjongManagerHelper : SQLiteOpenHelper {
      * 現存するバックアップファイルをコピーして
      * 麻雀マネージャー用のデータベースを作成する。
      */
-    public fun createDataBase() {
+    public fun createDataBase(copyMode: Int) {
 
         Log.v("MahjongManagerHelper", "start createDataBase")
 
         //データベースの存在判定
-        if (checkDBExists()) {
+        if (!checkDBExists()) {
             // readableDatabaseメソッドを呼び出すことで、DBがオープンされる
             readableDatabase
 
             var toCheckDb: SQLiteDatabase? = null
 
             try {
-                copyDataBase()
+                copyDataBase(copyMode)
 
                 toCheckDb = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY)
 
@@ -67,13 +74,13 @@ class MahjongManagerHelper : SQLiteOpenHelper {
                 e.run { e.printStackTrace() }
             } catch (e: SQLiteException) {
                 e.run { e.printStackTrace() }
-            }finally {
+            } finally {
                 toCheckDb?.close()
             }
 
         }
 
-        Log.v("MahjongManagerHelper", "start createDataBase")
+        Log.v("MahjongManagerHelper", "end createDataBase")
     }
 
     /**
@@ -119,11 +126,25 @@ class MahjongManagerHelper : SQLiteOpenHelper {
     /**
      * 麻雀マネージャーのDBファイルを雀ログのDBファイルへコピーする。
      */
-    private fun copyDataBase() {
+    private fun copyDataBase(copyMode: Int) {
 
         Log.v("MahjongManagerHelper", "start copyDataBase")
 
-        val inputStream = mContext.assets.open(DataBaseNameConst.MAHJONG_MANAGER.getDataBaseName())
+        when (copyMode) {
+            MahjongManagerConst.COPY_MODE_ASEETS -> copyDataBaseFromAseets()
+
+            MahjongManagerConst.COPY_MODE_BACKUP -> copyDataBaseFromBackUp()
+        }
+
+        Log.v("MahjongManagerHelper", "end copyDataBase")
+    }
+
+    private fun copyDataBaseFromAseets() {
+
+        Log.v("MahjongManagerHelper", "start copyDataBaseFromAseets")
+
+        var inputStream: InputStream =
+            mContext.assets.open(DataBaseNameConst.MAHJONG_MANAGER.getDataBaseName())
         val outputStream = FileOutputStream(dbPath)
 
         var buffer: ByteArray = ByteArray(1024)
@@ -140,7 +161,64 @@ class MahjongManagerHelper : SQLiteOpenHelper {
         outputStream.close()
         inputStream.close()
 
-        Log.v("MahjongManagerHelper", "end copyDataBase")
+        Log.v("MahjongManagerHelper", "end copyDataBaseFromAseets")
+
+    }
+
+    private fun copyDataBaseFromBackUp() {
+
+        Log.v("MahjongManagerHelper", "start copyDataBaseFromBackUp")
+
+        val keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC
+        val masterkeysAlias = MasterKeys.getOrCreate(keyGenParameterSpec)
+
+        val backupFile = File(
+            mContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),
+            databaseName
+        )
+
+        // backup用のファイルが存在しない場合、処理終了
+        if (!backupFile.exists()) {
+            backUpExist = backupFile.exists()
+            Log.v("MahjongManagerHelper", "There is no backup file.")
+            Log.v("MahjongManagerHelper", "end copyDataBaseFromBackUp")
+            return
+        }
+
+        // バックアップからコピーする場合、dbPath上のDBファイルを削除し、新規にファイルを生成する
+
+        mContext.deleteFile(databaseName)
+
+        val inputEncryptedFile = EncryptedFile.Builder(
+            backupFile,
+            mContext,
+            masterkeysAlias,
+            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build()
+
+        val contents = inputEncryptedFile.openFileInput().bufferedReader().useLines { lines ->
+            lines.fold("") { working, line ->
+                "$working\n$line"
+            }
+        }
+
+        val outputEncryptedFile = EncryptedFile.Builder(
+            File(dbPath, databaseName),
+            mContext,
+            masterkeysAlias,
+            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build()
+
+        outputEncryptedFile.openFileOutput().bufferedWriter().use { writer ->
+            writer.write(contents)
+        }
+
+        Log.v("MahjongManagerHelper", "end copyDataBaseFromBackUp")
+
+    }
+
+    public fun getBackUpExist():Boolean {
+        return backUpExist
     }
 
 }

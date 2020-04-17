@@ -1,4 +1,4 @@
-package com.mahjong.constant
+package com.mahjong.jonglog.constant
 
 /**
  * This class is Object to Define MahjongManager's Info.
@@ -22,4 +22,9 @@ object MahjongManagerConst {
     val helperName: String = HelperNameConst.MAHJONG_MANAGER_HELPER.getHelperName()
 
     val DATABASE_NAME: String = DataBaseNameConst.MAHJONG_MANAGER.getDataBaseName()
+
+    const val COPY_MODE_ASEETS = 1
+
+    const val COPY_MODE_BACKUP = 2
+
 }
